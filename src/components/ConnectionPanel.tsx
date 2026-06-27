@@ -1,52 +1,74 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useMemo } from "react";
+import { BridgeClientError, startSession, stopSession } from "@/lib/bridgeClient";
 import { useI18n } from "@/i18n/I18nProvider";
 import { useMcpStore } from "@/stores/useMcpStore";
 
 export function ConnectionPanel() {
   const { t } = useI18n();
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const command = useMcpStore((state) => state.command);
+  const sessionId = useMcpStore((state) => state.sessionId);
   const connectionStatus = useMcpStore((state) => state.connectionStatus);
   const setCommand = useMcpStore((state) => state.setCommand);
   const setConnecting = useMcpStore((state) => state.setConnecting);
   const setConnected = useMcpStore((state) => state.setConnected);
+  const setError = useMcpStore((state) => state.setError);
   const resetSession = useMcpStore((state) => state.resetSession);
-
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
-    };
-  }, []);
+  const fetchTools = useMcpStore((state) => state.fetchTools);
 
   const connectDisabled = !command.trim() || connectionStatus === "connecting";
   const disconnectDisabled = connectionStatus !== "connected";
 
-  const handleConnect = () => {
+  const errorCodeMessages = useMemo(
+    () => ({
+      E_CMD_EMPTY: t("error.E_CMD_EMPTY"),
+      E_SESSION_NOT_FOUND: t("error.E_SESSION_NOT_FOUND"),
+      E_BAD_REQUEST: t("error.E_BAD_REQUEST"),
+      E_INTERNAL: t("error.E_INTERNAL"),
+      E_UNKNOWN: t("error.E_UNKNOWN"),
+    }),
+    [t],
+  );
+
+  const toReadableError = (error: unknown) => {
+    if (error instanceof BridgeClientError) {
+      const localized =
+        errorCodeMessages[error.code as keyof typeof errorCodeMessages] ?? error.message ?? t("error.E_UNKNOWN");
+      return `${error.code}: ${localized}`;
+    }
+    return `E_UNKNOWN: ${t("error.E_UNKNOWN")}`;
+  };
+
+  const handleConnect = async () => {
     if (connectDisabled) {
       return;
     }
 
     setConnecting(t("store.log.connecting"));
 
-    timerRef.current = setTimeout(() => {
-      const latestStatus = useMcpStore.getState().connectionStatus;
-      if (latestStatus === "connecting") {
-        setConnected(t("store.log.connected"));
-      }
-    }, 1000);
+    try {
+      const data = await startSession({ command: command.trim() });
+      setConnected(data.sessionId, t("store.log.connected"));
+      await fetchTools(data.sessionId);
+    } catch (error) {
+      setError(toReadableError(error));
+    }
   };
 
-  const handleDisconnect = () => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
+  const handleDisconnect = async () => {
+    if (!sessionId) {
+      setError(`E_SESSION_NOT_FOUND: ${t("error.E_SESSION_NOT_FOUND")}`);
+      return;
     }
-    resetSession(t("store.log.disconnected"));
+
+    try {
+      await stopSession({ sessionId });
+      resetSession(t("store.log.disconnected"));
+    } catch (error) {
+      setError(toReadableError(error));
+    }
   };
 
   return (

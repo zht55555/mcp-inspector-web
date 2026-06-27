@@ -1,27 +1,79 @@
-# MCP Inspector Web (Day1)
+# MCP Inspector Web
 
-MCP Inspector 的前端骨架项目。Day1 目标是完成页面结构、状态流转与伪连接演示。
+MCP Inspector 是一个面向 MCP 调试流程的可视化面板原型。当前版本提供会话连接、工具列表、动态参数表单、工具调用、结果展示、请求日志与 SSE 日志流能力，并通过 Bridge 服务承接后端接口。
 
-## 启动步骤
+## Core Features
+
+1. Session connect / disconnect with visible status and sessionId.
+2. Tools catalog loading, search, retry, and empty/error states.
+3. Schema-driven parameter form rendering and field validation.
+4. Tool execution with requestId, duration, result, and error inspection.
+5. SSE log stream with reconnect and requestId filtering.
+6. Built-in i18n support for zh-CN and en-US.
+
+## Quick Start
+
+Frontend:
 
 ```bash
+cd mcp-inspector-web
 npm install
 npm run dev
 ```
 
-浏览器访问：`http://localhost:3000`
+Bridge:
 
-## Day1 已完成功能
+```bash
+cd mcp-inspector-web/bridge
+npm install
+npm run dev
+```
 
-1. Next.js + TypeScript + Tailwind + src 架构初始化完成。
-2. 首页三段布局完成：顶部状态栏、左侧连接/工具区、右侧日志区。
-3. Zustand 状态管理已接入。
-4. 连接流程支持 `idle -> connecting -> connected`（1 秒伪连接）。
-5. 断开流程支持回到 `idle`。
-6. 状态变化会写入日志面板并展示时间。
+Open:
 
-## Day2 计划
+1. Frontend: http://localhost:3000
+2. Bridge health: http://localhost:3001/health
 
-1. 接入真实 Bridge 接口。
-2. 实现 `POST /api/session/start` 与 `POST /api/session/stop`。
-3. 用真实接口替换 Day1 的 1 秒伪连接。
+## i18n
+
+1. Use the top-right language switcher to toggle between zh-CN and en-US.
+2. UI strings are routed through the i18n dictionary files under src/i18n/messages.
+3. Language preference is persisted locally in the browser.
+
+## Project Status
+
+Day1-Day6 MVP slices are implemented:
+
+1. Frontend app shell and state flow.
+2. Real bridge session start / stop.
+3. Tools list API and catalog rendering.
+4. Dynamic schema form and args preview.
+5. Tool execution flow and result inspector.
+6. SSE log stream and reconnect handling.
+
+## Documentation
+
+1. Install guide: docs/INSTALL.md
+2. API reference: docs/API.md
+3. Architecture overview: docs/ARCHITECTURE.md
+4. Demo script: DEMO_SCRIPT.md
+5. Release checklist: CHECKLIST.md
+6. Known issues: KNOWN_ISSUES.md
+7. V1.1 roadmap: V1.1_ROADMAP.md
+
+## Known Limitations
+
+1. Tool execution is currently mock-based and not connected to a real MCP SDK.
+2. Session state is in-memory only.
+3. SSE replay is limited to a small recent in-memory queue.
+4. Some advanced JSON Schema shapes still fall back to generic JSON entry.
+
+## Contributing
+
+1. Work on the dev branch for feature development.
+2. Keep new UI strings in the i18n dictionaries.
+3. Validate with frontend and bridge builds before pushing.
+
+## Next
+
+See V1.1_ROADMAP.md for the next iteration: real MCP integration, persistence, richer metrics, and multi-session support.
