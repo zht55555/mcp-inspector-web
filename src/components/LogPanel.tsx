@@ -1,13 +1,49 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useI18n } from "@/i18n/I18nProvider";
+import { subscribeToEvents } from "@/lib/eventStream";
 import { useMcpStore } from "@/stores/useMcpStore";
 
 export function LogPanel() {
   const { t } = useI18n();
   const [requestIdKeyword, setRequestIdKeyword] = useState("");
   const logs = useMcpStore((state) => state.logs);
+  const sessionId = useMcpStore((state) => state.sessionId);
+  const streamConnected = useMcpStore((state) => state.streamConnected);
+  const appendStreamLog = useMcpStore((state) => state.appendStreamLog);
+  const setStreamConnected = useMcpStore((state) => state.setStreamConnected);
+
+  useEffect(() => {
+    if (!sessionId) {
+      setStreamConnected(false);
+      return;
+    }
+
+    const unsubscribe = subscribeToEvents(
+      sessionId,
+      (event) => {
+        if (event.type === "heartbeat") {
+          return;
+        }
+
+        appendStreamLog({
+          timestamp: event.timestamp,
+          level: event.level,
+          message: event.message,
+          requestId: event.requestId,
+        });
+      },
+      (connected) => {
+        setStreamConnected(connected);
+      },
+    );
+
+    return () => {
+      unsubscribe();
+      setStreamConnected(false);
+    };
+  }, [appendStreamLog, sessionId, setStreamConnected]);
 
   const sortedLogs = useMemo(() => {
     const filtered = requestIdKeyword.trim()
@@ -21,9 +57,14 @@ export function LogPanel() {
     <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-slate-900">{t("logs.title")}</h2>
-        <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
-          {logs.length}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${streamConnected ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"}`}>
+            {streamConnected ? t("stream.connected") : t("stream.disconnected")}
+          </span>
+          <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+            {logs.length}
+          </span>
+        </div>
       </div>
 
       <input

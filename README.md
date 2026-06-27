@@ -1,6 +1,6 @@
-# MCP Inspector Web (Day5)
+# MCP Inspector Web (Day6)
 
-MCP Inspector 的前端 + Bridge 骨架项目。Day5 目标是打通 tools/call 真调用。
+MCP Inspector 的前端 + Bridge 骨架项目。Day6 目标是补齐 SSE 日志流与稳定性框架。
 
 ## 启动步骤
 
@@ -66,8 +66,16 @@ Bridge 健康检查：`http://localhost:3001/health`
 4. 日志支持 request/response/error 链路记录与 requestId 过滤。
 5. Day5 新增结果面板、执行按钮和错误提示文案已接入 i18n。
 
-## Day6 计划
+## Day6 已完成功能
 
-1. 接入 SSE 实时日志流。
-2. 实现超时熔断策略。
-3. 实现崩溃重连与断流恢复。
+1. Bridge 新增 SSE 日志流接口 `GET /api/events/stream`。
+2. 工具调用已通过后端日志服务产出 request/response/error 事件。
+3. 前端 LogPanel 已接入 SSE 订阅与 3 秒自动重连。
+4. 超时调用返回 `E_TIMEOUT` 并进入结果面板与日志流。
+5. 日志流连接状态文案已接入 i18n。
+
+## Day7 计划
+
+1. 手工验收全清单。
+2. 缺陷修复与打磨。
+3. README 与演示脚本完成。

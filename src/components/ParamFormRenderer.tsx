@@ -68,7 +68,6 @@ function FieldInput({ field, value, onChange }: { field: ParsedField; value: For
 export function ParamFormRenderer({ tool }: ParamFormRendererProps) {
   const { t } = useI18n();
   const sessionId = useMcpStore((state) => state.sessionId);
-  const addLog = useMcpStore((state) => state.addLog);
   const setLastExecution = useMcpStore((state) => state.setLastExecution);
   const [values, setValues] = useState<FormValueMap>({});
   const [errors, setErrors] = useState<FormErrorMap>({});
@@ -126,7 +125,6 @@ export function ParamFormRenderer({ tool }: ParamFormRendererProps) {
     const requestId = crypto.randomUUID();
     setExecuting(true);
     setLastExecution(null);
-    addLog("info", `${t("result.requestLog")} ${tool.name}`, requestId);
 
     try {
       const response = await callTool({
@@ -137,7 +135,6 @@ export function ParamFormRenderer({ tool }: ParamFormRendererProps) {
         requestId,
       });
 
-      addLog("info", `${t("result.responseLog")} ${tool.name}`, response.requestId);
       setLastExecution({
         requestId: response.requestId,
         ok: true,
@@ -148,7 +145,6 @@ export function ParamFormRenderer({ tool }: ParamFormRendererProps) {
       const errorCode = error instanceof BridgeClientError ? error.code : "E_UNKNOWN";
       const errorMessage = t(`error.${errorCode}` as never) || t("error.E_UNKNOWN");
 
-      addLog("error", `${errorCode}: ${errorMessage}`, requestId);
       setLastExecution({
         requestId,
         ok: false,

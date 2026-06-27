@@ -14,6 +14,8 @@ interface McpActions {
   setToolsLoading: (loading: boolean) => void;
   setToolsError: (errorCode: string | null) => void;
   setLastExecution: (execution: McpUiState["lastExecution"]) => void;
+  setStreamConnected: (connected: boolean) => void;
+  appendStreamLog: (log: Omit<UiLog, "id"> & { requestId?: string }) => void;
   fetchTools: (sessionId: string) => Promise<void>;
 }
 
@@ -37,6 +39,7 @@ export const useMcpStore = create<McpStore>((set) => ({
   tools: [],
   toolsLoading: false,
   toolsError: null,
+  streamConnected: false,
 
   setCommand: (command) => {
     set({ command });
@@ -50,6 +53,25 @@ export const useMcpStore = create<McpStore>((set) => ({
 
   setLastExecution: (execution) => {
     set({ lastExecution: execution });
+  },
+
+  setStreamConnected: (connected) => {
+    set({ streamConnected: connected });
+  },
+
+  appendStreamLog: (log) => {
+    set((state) => ({
+      logs: [
+        ...state.logs,
+        {
+          id: crypto.randomUUID(),
+          timestamp: log.timestamp,
+          level: log.level,
+          message: log.message,
+          requestId: log.requestId,
+        },
+      ],
+    }));
   },
 
   setSelectedTool: (tool) => {
@@ -118,6 +140,7 @@ export const useMcpStore = create<McpStore>((set) => ({
       tools: [],
       toolsLoading: false,
       toolsError: null,
+      streamConnected: false,
     }));
   },
 }));

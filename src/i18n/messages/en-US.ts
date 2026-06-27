@@ -44,6 +44,8 @@ export const enUSMessages = {
   "result.failed": "Failed",
   "result.requestLog": "Request sent",
   "result.responseLog": "Response received",
+  "stream.connected": "Stream connected",
+  "stream.disconnected": "Reconnecting stream",
   "logs.title": "Logs",
   "logs.empty": "No logs yet. Start by connecting to create session events.",
   "logs.filterPlaceholder": "Filter logs by requestId",

@@ -34,4 +34,5 @@ export interface McpUiState {
   tools: UiTool[];
   toolsLoading: boolean;
   toolsError: string | null;
+  streamConnected: boolean;
 }

@@ -44,6 +44,8 @@ export const zhCNMessages = {
   "result.failed": "失败",
   "result.requestLog": "请求已发送",
   "result.responseLog": "响应已返回",
+  "stream.connected": "日志流已连接",
+  "stream.disconnected": "日志流重连中",
   "logs.title": "日志",
   "logs.empty": "暂无日志。先建立连接以生成会话事件。",
   "logs.filterPlaceholder": "按 requestId 过滤日志",
