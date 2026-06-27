@@ -1,6 +1,6 @@
-# MCP Inspector Web (Day4)
+# MCP Inspector Web (Day5)
 
-MCP Inspector 的前端 + Bridge 骨架项目。Day4 目标是完成动态参数表单与校验。
+MCP Inspector 的前端 + Bridge 骨架项目。Day5 目标是打通 tools/call 真调用。
 
 ## 启动步骤
 
@@ -58,8 +58,16 @@ Bridge 健康检查：`http://localhost:3001/health`
 5. 生成 args JSON 预览并支持复制。
 6. Day4 新增表单文案与校验提示已接入 i18n 词典。
 
-## Day5 计划
+## Day5 已完成功能
 
-1. 接入 tools/call 真调用。
-2. 请求与响应日志打通。
-3. 结果面板展示执行状态和耗时。
+1. Bridge 新增 `POST /api/call`，支持 mock 工具执行。
+2. 前端 Execute 按钮已接入真实调用链路。
+3. 单次调用展示 requestId、durationMs、执行结果与错误信息。
+4. 日志支持 request/response/error 链路记录与 requestId 过滤。
+5. Day5 新增结果面板、执行按钮和错误提示文案已接入 i18n。
+
+## Day6 计划
+
+1. 接入 SSE 实时日志流。
+2. 实现超时熔断策略。
+3. 实现崩溃重连与断流恢复。

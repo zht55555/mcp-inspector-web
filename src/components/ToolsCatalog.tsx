@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { ParamFormRenderer } from "@/components/ParamFormRenderer";
+import { ResultInspector } from "@/components/ResultInspector";
 import { useI18n } from "@/i18n/I18nProvider";
 import { useMcpStore } from "@/stores/useMcpStore";
 
@@ -124,6 +125,7 @@ export function ToolsCatalog() {
       </section>
 
       <ParamFormRenderer tool={selectedTool} />
+      <ResultInspector />
     </div>
   );
 }

@@ -2,9 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { buildArgsFromForm } from "@/lib/buildArgs";
+import { BridgeClientError, callTool } from "@/lib/bridgeClient";
 import { parseSchemaToFields } from "@/lib/schemaParser";
 import { validateFormValues } from "@/lib/validateArgs";
 import { useI18n } from "@/i18n/I18nProvider";
+import { useMcpStore } from "@/stores/useMcpStore";
 import type { UiTool } from "@/types/mcp";
 import type { FormErrorMap, FormValueMap, ParsedField } from "@/types/schema";
 
@@ -65,9 +67,13 @@ function FieldInput({ field, value, onChange }: { field: ParsedField; value: For
 
 export function ParamFormRenderer({ tool }: ParamFormRendererProps) {
   const { t } = useI18n();
+  const sessionId = useMcpStore((state) => state.sessionId);
+  const addLog = useMcpStore((state) => state.addLog);
+  const setLastExecution = useMcpStore((state) => state.setLastExecution);
   const [values, setValues] = useState<FormValueMap>({});
   const [errors, setErrors] = useState<FormErrorMap>({});
   const [copied, setCopied] = useState(false);
+  const [executing, setExecuting] = useState(false);
 
   const fields = useMemo(() => {
     return tool ? parseSchemaToFields(tool.inputSchema) : [];
@@ -108,6 +114,57 @@ export function ParamFormRenderer({ tool }: ParamFormRendererProps) {
     setErrors(nextErrors);
   };
 
+  const handleExecute = async () => {
+    const nextErrors = validateFormValues(fields, values);
+    setErrors(nextErrors);
+
+    if (Object.keys(nextErrors).length > 0 || !tool || !sessionId) {
+      return;
+    }
+
+    const args = buildArgsFromForm(fields, values);
+    const requestId = crypto.randomUUID();
+    setExecuting(true);
+    setLastExecution(null);
+    addLog("info", `${t("result.requestLog")} ${tool.name}`, requestId);
+
+    try {
+      const response = await callTool({
+        sessionId,
+        toolName: tool.name,
+        args,
+        timeoutMs: 30000,
+        requestId,
+      });
+
+      addLog("info", `${t("result.responseLog")} ${tool.name}`, response.requestId);
+      setLastExecution({
+        requestId: response.requestId,
+        ok: true,
+        durationMs: response.durationMs,
+        result: response.result,
+      });
+    } catch (error) {
+      const errorCode = error instanceof BridgeClientError ? error.code : "E_UNKNOWN";
+      const errorMessage = t(`error.${errorCode}` as never) || t("error.E_UNKNOWN");
+
+      addLog("error", `${errorCode}: ${errorMessage}`, requestId);
+      setLastExecution({
+        requestId,
+        ok: false,
+        durationMs: 0,
+        errorCode,
+        errorMessage,
+        error: {
+          code: errorCode,
+          message: errorMessage,
+        },
+      });
+    } finally {
+      setExecuting(false);
+    }
+  };
+
   const handleCopy = async () => {
     await navigator.clipboard.writeText(argsPreview);
     setCopied(true);
@@ -146,6 +203,14 @@ export function ParamFormRenderer({ tool }: ParamFormRendererProps) {
           className="rounded-xl bg-sky-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-sky-700"
         >
           {t("form.validate")}
+        </button>
+        <button
+          type="button"
+          onClick={handleExecute}
+          disabled={executing || !sessionId}
+          className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white transition enabled:hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {executing ? t("form.executing") : t("form.execute")}
         </button>
         <button
           type="button"

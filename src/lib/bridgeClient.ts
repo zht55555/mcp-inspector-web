@@ -43,6 +43,21 @@ interface GetToolsResponse {
   tools: ToolItem[];
 }
 
+interface CallToolRequest {
+  sessionId: string;
+  toolName: string;
+  args: Record<string, unknown>;
+  timeoutMs?: number;
+  requestId?: string;
+}
+
+export interface CallToolResponse {
+  requestId: string;
+  ok: true;
+  result: Record<string, unknown>;
+  durationMs: number;
+}
+
 const BRIDGE_BASE_URL = process.env.NEXT_PUBLIC_BRIDGE_URL ?? "http://localhost:3001";
 
 async function bridgeRequest<T>(path: string, init: RequestInit): Promise<T> {
@@ -85,5 +100,12 @@ export async function getTools(sessionId: string): Promise<GetToolsResponse> {
   const search = new URLSearchParams({ sessionId });
   return bridgeRequest<GetToolsResponse>(`/api/tools?${search.toString()}`, {
     method: "GET",
+  });
+}
+
+export async function callTool(input: CallToolRequest): Promise<CallToolResponse> {
+  return bridgeRequest<CallToolResponse>("/api/call", {
+    method: "POST",
+    body: JSON.stringify(input),
   });
 }

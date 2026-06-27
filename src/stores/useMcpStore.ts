@@ -8,21 +8,23 @@ interface McpActions {
   setConnected: (sessionId: string, message: string) => void;
   setError: (message: string) => void;
   resetSession: (message: string) => void;
-  addLog: (level: UiLog["level"], message: string) => void;
+  addLog: (level: UiLog["level"], message: string, requestId?: string) => void;
   setSelectedTool: (tool: McpUiState["selectedTool"]) => void;
   setTools: (tools: McpUiState["tools"]) => void;
   setToolsLoading: (loading: boolean) => void;
   setToolsError: (errorCode: string | null) => void;
+  setLastExecution: (execution: McpUiState["lastExecution"]) => void;
   fetchTools: (sessionId: string) => Promise<void>;
 }
 
 type McpStore = McpUiState & McpActions;
 
-const createLog = (level: UiLog["level"], message: string): UiLog => ({
+const createLog = (level: UiLog["level"], message: string, requestId?: string): UiLog => ({
   id: crypto.randomUUID(),
   timestamp: new Date().toISOString(),
   level,
   message,
+  requestId,
 });
 
 export const useMcpStore = create<McpStore>((set) => ({
@@ -30,6 +32,7 @@ export const useMcpStore = create<McpStore>((set) => ({
   sessionId: null,
   command: "",
   logs: [],
+  lastExecution: null,
   selectedTool: null,
   tools: [],
   toolsLoading: false,
@@ -39,10 +42,14 @@ export const useMcpStore = create<McpStore>((set) => ({
     set({ command });
   },
 
-  addLog: (level, message) => {
+  addLog: (level, message, requestId) => {
     set((state) => ({
-      logs: [...state.logs, createLog(level, message)],
+      logs: [...state.logs, createLog(level, message, requestId)],
     }));
+  },
+
+  setLastExecution: (execution) => {
+    set({ lastExecution: execution });
   },
 
   setSelectedTool: (tool) => {
@@ -106,6 +113,7 @@ export const useMcpStore = create<McpStore>((set) => ({
       connectionStatus: "idle",
       sessionId: null,
       logs: [...state.logs, createLog("info", message)],
+      lastExecution: null,
       selectedTool: null,
       tools: [],
       toolsLoading: false,
