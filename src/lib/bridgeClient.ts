@@ -33,6 +33,16 @@ interface StopSessionResponse {
   status: "stopped";
 }
 
+export interface ToolItem {
+  name: string;
+  description: string;
+  inputSchema: Record<string, unknown>;
+}
+
+interface GetToolsResponse {
+  tools: ToolItem[];
+}
+
 const BRIDGE_BASE_URL = process.env.NEXT_PUBLIC_BRIDGE_URL ?? "http://localhost:3001";
 
 async function bridgeRequest<T>(path: string, init: RequestInit): Promise<T> {
@@ -68,5 +78,12 @@ export async function stopSession(input: StopSessionRequest): Promise<StopSessio
   return bridgeRequest<StopSessionResponse>("/api/session/stop", {
     method: "POST",
     body: JSON.stringify(input),
+  });
+}
+
+export async function getTools(sessionId: string): Promise<GetToolsResponse> {
+  const search = new URLSearchParams({ sessionId });
+  return bridgeRequest<GetToolsResponse>(`/api/tools?${search.toString()}`, {
+    method: "GET",
   });
 }

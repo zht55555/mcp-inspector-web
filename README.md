@@ -1,6 +1,6 @@
-# MCP Inspector Web (Day2)
+# MCP Inspector Web (Day3)
 
-MCP Inspector 的前端 + Bridge 骨架项目。Day2 目标是打通真实会话链路。
+MCP Inspector 的前端 + Bridge 骨架项目。Day3 目标是打通 tools list 真链路。
 
 ## 启动步骤
 
@@ -40,8 +40,17 @@ Bridge 健康检查：`http://localhost:3001/health`
 5. 错误码 `E_CMD_EMPTY`、`E_SESSION_NOT_FOUND` 可在日志中显示。
 6. Day2 新增错误文案已接入 i18n 词典。
 
-## Day3 计划
+## Day3 已完成功能
 
-1. 接入 `GET /api/tools`。
-2. ToolsCatalog 渲染真实工具目录。
-3. 补齐加载态、空态、错误态。
+1. Bridge 新增 `GET /api/tools` 接口，支持按 `sessionId` 获取工具列表。
+2. Bridge tools 服务返回 mock 工具数据（3 条），预留后续真实 MCP 接入位。
+3. 前端连接成功后自动拉取工具列表。
+4. ToolsCatalog 支持工具搜索、加载态、空态、错误态与重试。
+5. 工具卡片展示名称、描述、schema 字段数。
+6. Day3 新增文案和错误码提示已接入 i18n 词典。
+
+## Day4 计划
+
+1. 动态参数表单渲染。
+2. schema 规则校验。
+3. 生成 args 预览并准备接 tools call。

@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { BridgeClientError, getTools } from "@/lib/bridgeClient";
 import type { ConnectionStatus, McpUiState, UiLog } from "@/types/mcp";
 
 interface McpActions {
@@ -8,6 +9,10 @@ interface McpActions {
   setError: (message: string) => void;
   resetSession: (message: string) => void;
   addLog: (level: UiLog["level"], message: string) => void;
+  setTools: (tools: McpUiState["tools"]) => void;
+  setToolsLoading: (loading: boolean) => void;
+  setToolsError: (errorCode: string | null) => void;
+  fetchTools: (sessionId: string) => Promise<void>;
 }
 
 type McpStore = McpUiState & McpActions;
@@ -24,6 +29,9 @@ export const useMcpStore = create<McpStore>((set) => ({
   sessionId: null,
   command: "",
   logs: [],
+  tools: [],
+  toolsLoading: false,
+  toolsError: null,
 
   setCommand: (command) => {
     set({ command });
@@ -33,6 +41,32 @@ export const useMcpStore = create<McpStore>((set) => ({
     set((state) => ({
       logs: [...state.logs, createLog(level, message)],
     }));
+  },
+
+  setTools: (tools) => {
+    set({ tools });
+  },
+
+  setToolsLoading: (loading) => {
+    set({ toolsLoading: loading });
+  },
+
+  setToolsError: (errorCode) => {
+    set({ toolsError: errorCode });
+  },
+
+  fetchTools: async (sessionId) => {
+    set({ toolsLoading: true, toolsError: null });
+
+    try {
+      const data = await getTools(sessionId);
+      set({ tools: data.tools, toolsError: null });
+    } catch (error) {
+      const errorCode = error instanceof BridgeClientError ? error.code : "E_UNKNOWN";
+      set({ toolsError: errorCode, tools: [] });
+    } finally {
+      set({ toolsLoading: false });
+    }
   },
 
   setConnecting: (message) => {
@@ -62,6 +96,9 @@ export const useMcpStore = create<McpStore>((set) => ({
       connectionStatus: "idle",
       sessionId: null,
       logs: [...state.logs, createLog("info", message)],
+      tools: [],
+      toolsLoading: false,
+      toolsError: null,
     }));
   },
 }));

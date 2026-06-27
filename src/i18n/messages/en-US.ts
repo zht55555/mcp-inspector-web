@@ -19,6 +19,11 @@ export const enUSMessages = {
   "connection.disconnect": "Disconnect",
   "tools.title": "Tools Catalog",
   "tools.placeholder": "Day1 Placeholder",
+  "tools.searchPlaceholder": "Search tools by name or description",
+  "tools.loading": "Loading tools...",
+  "tools.empty": "No tools available.",
+  "tools.retry": "Retry",
+  "tools.schemaFields": "Schema fields",
   "logs.title": "Logs",
   "logs.empty": "No logs yet. Start by connecting to create session events.",
   "logs.level.info": "Info",
@@ -30,5 +35,7 @@ export const enUSMessages = {
   "error.E_SESSION_NOT_FOUND": "Session not found.",
   "error.E_BAD_REQUEST": "Invalid request body.",
   "error.E_INTERNAL": "Internal server error.",
+  "error.E_NOT_CONNECTED": "Session is not connected.",
+  "error.E_LIST_TOOLS_FAIL": "Failed to load tools.",
   "error.E_UNKNOWN": "Unknown error."
 } as const;

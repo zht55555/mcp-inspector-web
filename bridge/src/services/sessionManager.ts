@@ -5,6 +5,14 @@ import type { SessionInfo, StartSessionData, StopSessionData } from "../types/ap
 class SessionManager {
   private session: SessionInfo | null = null;
 
+  assertSession(sessionId: string): SessionInfo {
+    if (!this.session || this.session.sessionId !== sessionId) {
+      throw new AppError(ErrorCodes.NOT_CONNECTED, "Session is not connected.", 404);
+    }
+
+    return this.session;
+  }
+
   startSession(command: string): StartSessionData {
     const trimmedCommand = command.trim();
     if (!trimmedCommand) {
@@ -25,9 +33,7 @@ class SessionManager {
   }
 
   stopSession(sessionId: string): StopSessionData {
-    if (!this.session || this.session.sessionId !== sessionId) {
-      throw new AppError(ErrorCodes.SESSION_NOT_FOUND, "Session not found.", 404);
-    }
+    this.assertSession(sessionId);
 
     this.session = null;
     return { status: "stopped" };

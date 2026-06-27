@@ -19,6 +19,11 @@ export const zhCNMessages = {
   "connection.disconnect": "断开",
   "tools.title": "工具目录",
   "tools.placeholder": "Day1 占位",
+  "tools.searchPlaceholder": "搜索工具名称或描述",
+  "tools.loading": "工具列表加载中...",
+  "tools.empty": "当前没有可展示的工具。",
+  "tools.retry": "重试",
+  "tools.schemaFields": "Schema 字段数",
   "logs.title": "日志",
   "logs.empty": "暂无日志。先建立连接以生成会话事件。",
   "logs.level.info": "信息",
@@ -30,5 +35,7 @@ export const zhCNMessages = {
   "error.E_SESSION_NOT_FOUND": "未找到会话。",
   "error.E_BAD_REQUEST": "请求参数无效。",
   "error.E_INTERNAL": "服务内部错误。",
+  "error.E_NOT_CONNECTED": "当前会话未连接。",
+  "error.E_LIST_TOOLS_FAIL": "获取工具列表失败。",
   "error.E_UNKNOWN": "未知错误。"
 } as const;

@@ -16,6 +16,7 @@ export function ConnectionPanel() {
   const setConnected = useMcpStore((state) => state.setConnected);
   const setError = useMcpStore((state) => state.setError);
   const resetSession = useMcpStore((state) => state.resetSession);
+  const fetchTools = useMcpStore((state) => state.fetchTools);
 
   const connectDisabled = !command.trim() || connectionStatus === "connecting";
   const disconnectDisabled = connectionStatus !== "connected";
@@ -50,6 +51,7 @@ export function ConnectionPanel() {
     try {
       const data = await startSession({ command: command.trim() });
       setConnected(data.sessionId, t("store.log.connected"));
+      await fetchTools(data.sessionId);
     } catch (error) {
       setError(toReadableError(error));
     }
