@@ -4,7 +4,7 @@ import type { ConnectionStatus, McpUiState, UiLog } from "@/types/mcp";
 interface McpActions {
   setCommand: (command: string) => void;
   setConnecting: (message: string) => void;
-  setConnected: (message: string) => void;
+  setConnected: (sessionId: string, message: string) => void;
   setError: (message: string) => void;
   resetSession: (message: string) => void;
   addLog: (level: UiLog["level"], message: string) => void;
@@ -18,8 +18,6 @@ const createLog = (level: UiLog["level"], message: string): UiLog => ({
   level,
   message,
 });
-
-const createSessionId = () => `session-${Date.now()}`;
 
 export const useMcpStore = create<McpStore>((set) => ({
   connectionStatus: "idle",
@@ -44,10 +42,10 @@ export const useMcpStore = create<McpStore>((set) => ({
     }));
   },
 
-  setConnected: (message) => {
+  setConnected: (sessionId, message) => {
     set((state) => ({
       connectionStatus: "connected",
-      sessionId: createSessionId(),
+      sessionId,
       logs: [...state.logs, createLog("info", message)],
     }));
   },

@@ -25,5 +25,10 @@ export const zhCNMessages = {
   "logs.level.error": "错误",
   "store.log.connecting": "正在连接 MCP Bridge...",
   "store.log.connected": "连接成功。",
-  "store.log.disconnected": "会话已断开。"
+  "store.log.disconnected": "会话已断开。",
+  "error.E_CMD_EMPTY": "命令不能为空。",
+  "error.E_SESSION_NOT_FOUND": "未找到会话。",
+  "error.E_BAD_REQUEST": "请求参数无效。",
+  "error.E_INTERNAL": "服务内部错误。",
+  "error.E_UNKNOWN": "未知错误。"
 } as const;

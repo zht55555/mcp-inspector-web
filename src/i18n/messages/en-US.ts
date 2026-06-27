@@ -25,5 +25,10 @@ export const enUSMessages = {
   "logs.level.error": "Error",
   "store.log.connecting": "Connecting to MCP bridge...",
   "store.log.connected": "Connected successfully.",
-  "store.log.disconnected": "Session disconnected."
+  "store.log.disconnected": "Session disconnected.",
+  "error.E_CMD_EMPTY": "Command is required.",
+  "error.E_SESSION_NOT_FOUND": "Session not found.",
+  "error.E_BAD_REQUEST": "Invalid request body.",
+  "error.E_INTERNAL": "Internal server error.",
+  "error.E_UNKNOWN": "Unknown error."
 } as const;
