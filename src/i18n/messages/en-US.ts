@@ -24,6 +24,13 @@ export const enUSMessages = {
   "tools.empty": "No tools available.",
   "tools.retry": "Retry",
   "tools.schemaFields": "Schema fields",
+  "form.title": "Parameter Form",
+  "form.empty": "Select a tool above to generate the dynamic form.",
+  "form.required": "Required",
+  "form.validate": "Validate",
+  "form.copy": "Copy preview",
+  "form.copied": "Copied",
+  "form.previewTitle": "Args Preview",
   "logs.title": "Logs",
   "logs.empty": "No logs yet. Start by connecting to create session events.",
   "logs.level.info": "Info",
@@ -37,5 +44,11 @@ export const enUSMessages = {
   "error.E_INTERNAL": "Internal server error.",
   "error.E_NOT_CONNECTED": "Session is not connected.",
   "error.E_LIST_TOOLS_FAIL": "Failed to load tools.",
-  "error.E_UNKNOWN": "Unknown error."
+  "error.E_UNKNOWN": "Unknown error.",
+  "validation.required": "This field is required.",
+  "validation.number": "Enter a valid number.",
+  "validation.minimum": "Value is below the minimum.",
+  "validation.maximum": "Value exceeds the maximum.",
+  "validation.pattern": "Value does not match the required format.",
+  "validation.json": "Enter valid JSON."
 } as const;

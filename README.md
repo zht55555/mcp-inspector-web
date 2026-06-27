@@ -1,6 +1,6 @@
-# MCP Inspector Web (Day3)
+# MCP Inspector Web (Day4)
 
-MCP Inspector 的前端 + Bridge 骨架项目。Day3 目标是打通 tools list 真链路。
+MCP Inspector 的前端 + Bridge 骨架项目。Day4 目标是完成动态参数表单与校验。
 
 ## 启动步骤
 
@@ -49,8 +49,17 @@ Bridge 健康检查：`http://localhost:3001/health`
 5. 工具卡片展示名称、描述、schema 字段数。
 6. Day3 新增文案和错误码提示已接入 i18n 词典。
 
-## Day4 计划
+## Day4 已完成功能
 
-1. 动态参数表单渲染。
-2. schema 规则校验。
-3. 生成 args 预览并准备接 tools call。
+1. 基于工具 inputSchema 自动生成动态参数表单。
+2. 支持 string、number、boolean、enum、object、array/json 输入类型。
+3. 支持 required、minimum、maximum、pattern、JSON 合法性校验。
+4. 切换工具时表单与预览自动重置。
+5. 生成 args JSON 预览并支持复制。
+6. Day4 新增表单文案与校验提示已接入 i18n 词典。
+
+## Day5 计划
+
+1. 接入 tools/call 真调用。
+2. 请求与响应日志打通。
+3. 结果面板展示执行状态和耗时。

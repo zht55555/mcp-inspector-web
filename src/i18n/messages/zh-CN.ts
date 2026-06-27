@@ -24,6 +24,13 @@ export const zhCNMessages = {
   "tools.empty": "当前没有可展示的工具。",
   "tools.retry": "重试",
   "tools.schemaFields": "Schema 字段数",
+  "form.title": "参数表单",
+  "form.empty": "先从上方选择一个工具以生成动态表单。",
+  "form.required": "必填",
+  "form.validate": "校验参数",
+  "form.copy": "复制预览",
+  "form.copied": "已复制",
+  "form.previewTitle": "Args 预览",
   "logs.title": "日志",
   "logs.empty": "暂无日志。先建立连接以生成会话事件。",
   "logs.level.info": "信息",
@@ -37,5 +44,11 @@ export const zhCNMessages = {
   "error.E_INTERNAL": "服务内部错误。",
   "error.E_NOT_CONNECTED": "当前会话未连接。",
   "error.E_LIST_TOOLS_FAIL": "获取工具列表失败。",
-  "error.E_UNKNOWN": "未知错误。"
+  "error.E_UNKNOWN": "未知错误。",
+  "validation.required": "该字段为必填项。",
+  "validation.number": "请输入合法数字。",
+  "validation.minimum": "输入值低于最小限制。",
+  "validation.maximum": "输入值超过最大限制。",
+  "validation.pattern": "输入格式不符合要求。",
+  "validation.json": "请输入合法 JSON。"
 } as const;

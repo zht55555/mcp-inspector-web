@@ -18,6 +18,7 @@ export interface McpUiState {
   sessionId: string | null;
   command: string;
   logs: UiLog[];
+  selectedTool: UiTool | null;
   tools: UiTool[];
   toolsLoading: boolean;
   toolsError: string | null;

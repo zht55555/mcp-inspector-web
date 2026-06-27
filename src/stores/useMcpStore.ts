@@ -9,6 +9,7 @@ interface McpActions {
   setError: (message: string) => void;
   resetSession: (message: string) => void;
   addLog: (level: UiLog["level"], message: string) => void;
+  setSelectedTool: (tool: McpUiState["selectedTool"]) => void;
   setTools: (tools: McpUiState["tools"]) => void;
   setToolsLoading: (loading: boolean) => void;
   setToolsError: (errorCode: string | null) => void;
@@ -29,6 +30,7 @@ export const useMcpStore = create<McpStore>((set) => ({
   sessionId: null,
   command: "",
   logs: [],
+  selectedTool: null,
   tools: [],
   toolsLoading: false,
   toolsError: null,
@@ -41,6 +43,10 @@ export const useMcpStore = create<McpStore>((set) => ({
     set((state) => ({
       logs: [...state.logs, createLog(level, message)],
     }));
+  },
+
+  setSelectedTool: (tool) => {
+    set({ selectedTool: tool });
   },
 
   setTools: (tools) => {
@@ -60,10 +66,14 @@ export const useMcpStore = create<McpStore>((set) => ({
 
     try {
       const data = await getTools(sessionId);
-      set({ tools: data.tools, toolsError: null });
+      set({
+        tools: data.tools,
+        toolsError: null,
+        selectedTool: data.tools[0] ?? null,
+      });
     } catch (error) {
       const errorCode = error instanceof BridgeClientError ? error.code : "E_UNKNOWN";
-      set({ toolsError: errorCode, tools: [] });
+      set({ toolsError: errorCode, tools: [], selectedTool: null });
     } finally {
       set({ toolsLoading: false });
     }
@@ -96,6 +106,7 @@ export const useMcpStore = create<McpStore>((set) => ({
       connectionStatus: "idle",
       sessionId: null,
       logs: [...state.logs, createLog("info", message)],
+      selectedTool: null,
       tools: [],
       toolsLoading: false,
       toolsError: null,
